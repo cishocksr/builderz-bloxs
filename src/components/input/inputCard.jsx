@@ -36,6 +36,7 @@ const InputCard = ({ setOpen, listId, type }) => {
 
   const handleBtnClick = () => {
     if (type === 'card') {
+      console.log(listId, title);
       addMoreCard(title, listId);
       setTitle('');
       setOpen(false);

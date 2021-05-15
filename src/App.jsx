@@ -18,27 +18,38 @@ const useStyle = makeStyles((theme) => ({
 }));
 
 export default function App() {
-  const [data, setData] = useState(store);
+  const [listData, setListData] = useState(store);
   const classes = useStyle();
+  // const listId = listData.id;
+
   const addMoreCard = (title, listId) => {
-    console.log(title);
+    console.log(title, listId);
     const newCardId = uuid();
     const newCard = {
       id: newCardId,
       title,
     };
 
-    const list = data.lists[listId];
-    list.cards = [...list.cards, newCard];
+    // const list = listData;
+    listData[0].cards = [...listData.cards, newCard];
 
     const newState = {
-      ...data,
-      lists: {
-        ...data.lists,
-        [listId]: list,
-      },
+      ...listData,
     };
-    setData(newState);
+    setListData(newState);
+
+    // const newCard = {
+    //   id: newCardId,
+    //   title,
+    // };
+
+    // const list = listData.id;
+    // list.cards = [...list.cards, newCard];
+
+    // const newState = {
+    //   ...listData,
+    // };
+    // setListData(newState);
   };
 
   const addMoreList = (title) => {
@@ -49,13 +60,13 @@ export default function App() {
       cards: [],
     };
     const newState = {
-      listIds: [...data.listIds, newListId],
+      listIds: [...listData.listIds, newListId],
       lists: {
-        ...data.lists,
+        ...listData.lists,
         [newListId]: newList,
       },
     };
-    setData(newState);
+    setListData(newState);
   };
   const onDragEnd = (result) => {
     const { destination, source, draggableId, type } = result;
@@ -64,13 +75,13 @@ export default function App() {
     }
 
     if (type === 'list') {
-      const newListIds = data.listIds;
+      const newListIds = listData.listIds;
       newListIds.splice(source.index, 1);
       newListIds.splice(destination.index, 0, draggableId);
       return;
     }
-    const sourceList = data.lists[source.droppableId];
-    const destinationList = data.lists[destination.droppableId];
+    const sourceList = listData.lists[source.droppableId];
+    const destinationList = listData.lists[destination.droppableId];
     const draggingCard = sourceList.cards.filter(
       (card) => card.id === draggableId
     )[0];
@@ -79,42 +90,42 @@ export default function App() {
       sourceList.cards.splice(source.index, 1);
       destinationList.cards.splice(destination.index, 0, draggingCard);
       const newState = {
-        ...data,
+        ...listData,
         lists: {
-          ...data.lists,
+          ...listData.lists,
           [sourceList.id]: destinationList,
         },
       };
 
-      setData(newState);
+      setListData(newState);
     } else {
       sourceList.cards.splice(source.index, 1);
       destinationList.cards.splice(destination.index, 0, draggingCard);
 
       const newState = {
-        ...data,
+        ...listData,
         lists: {
-          ...data.lists,
+          ...listData.lists,
           [sourceList.id]: sourceList,
           [destinationList.id]: destinationList,
         },
       };
-      setData(newState);
+      setListData(newState);
     }
   };
 
   const updateListTitle = (title, listId) => {
-    const list = data.lists[listId];
+    const list = listData.lists[listId];
     list.title = title;
 
     const newState = {
-      ...data,
+      ...listData,
       lists: {
-        ...data.lists,
+        ...listData.lists,
         [listId]: list,
       },
     };
-    setData(newState);
+    setListData(newState);
   };
 
   return (
@@ -127,9 +138,8 @@ export default function App() {
               ref={provided.innerRef}
               {...provided.droppableProps}
             >
-              {data.listIds.map((listId, index) => {
-                const list = data.lists[listId];
-                return <List list={list} key={listId} index={index} />;
+              {listData.map((l, index) => {
+                return <List list={l} key={l} index={index} />;
               })}
               <InputContainer type='list' />
               {provided.placeholder}

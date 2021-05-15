@@ -17,7 +17,7 @@ const useStyle = makeStyles((theme) => ({
 }));
 
 export default function List({ list, index }) {
-  console.log(list);
+  const cards = list.cards;
   const classes = useStyle();
   return (
     <Draggable draggableId={list.id} index={index}>
@@ -33,7 +33,7 @@ export default function List({ list, index }) {
                   {...provided.droppableProps}
                   className={classes.cardContainer}
                 >
-                  {list.cards.map((card, index) => (
+                  {cards.map((card, index) => (
                     <Card key={card.id} card={card} index={index} />
                   ))}
                   {provided.placeholder}
